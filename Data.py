@@ -11,7 +11,7 @@ serviceKey="4lmWp814ERUDuydXPhoe%2FcCMA8%2BAdBGDoCEnTrCRixmHXdNe63pJDHI9NJueNefS
 
 
 def urlBuilder(server, key):
-    data='?'+'serviceKey='+key+'&numOfRows='+str(600)+'&pageNo='+str(1) +'&addr='
+    data='?'+'serviceKey='+key+'&numOfRows='+str(100)+'&pageNo='+str(1) +'&addr='
     request=server+data
 
     print(request)
@@ -36,7 +36,11 @@ class ChargingStation:
     def __init__(self, station):
         url = urlBuilder(server, serviceKey)
         data = urllib.request.urlopen(url).read()
-        tree = ElementTree.fromstring(data)
+
+        print(data[6:32252])
+        tree = ElementTree.fromstring(data[6:32252])
+
+        #tree=ElementTree.parse('tdata.xml')
         itemElement = list(tree.iter("item"))
 
         for item in itemElement:
@@ -54,48 +58,3 @@ class ChargingStation:
         for i in station:
             if add in i["주소"]:
                 list.append(i)
-    '''
-    def CreateJSON(self, station):
-        f=open('pos.json','w')
-        f.write('{\n"position": [\n')
-
-        for i in station:
-            f.write('{\n')
-            f.write('"lat": {0},\n'.format(i["위도"]))
-            f.write('"lng": {0}\n'.format(i["경도"]))
-
-            f.write('},\n')
-
-        f.write(']\n}')
-        f.close()
-    '''
-
-def start_Deco(func):
-    def func_wrapper(*args, **kwargs):
-        return "<!DOCTYPE html>\n{0}\n".format(func(*args, **kwargs))
-    return func_wrapper
-
-def html_deco(func):
-    def func_wrapper(*args, **kwargs):
-        return "<html>\n{0}\n</html>\n".format(func(*args, **kwargs))
-    return func_wrapper
-
-def head_deco(func):
-    def func_wrapper(*args, **kwargs):
-        return "<head>\n{0}\n</head>\n".format(func(*args, **kwargs))
-    return func_wrapper
-
-def body_deco(func):
-    def func_wrapper(*args, **kwargs):
-        return "<body>\n{0}\n</body>\n".format(func(*args, **kwargs))
-    return func_wrapper
-
-def div_deco(func):
-    def func_wrapper(*args, **kwargs):
-        return "<div>{0}</div>\n".format(func(*args, **kwargs))
-    return func_wrapper
-
-def script_deco(func):
-    def func_wrapper(*args, **kwargs):
-        return "<script>\n{0}\n</script>".format(func(*args, **kwargs))
-    return func_wrapper
