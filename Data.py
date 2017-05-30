@@ -37,10 +37,10 @@ class ChargingStation:
         url = urlBuilder(server, serviceKey)
         data = urllib.request.urlopen(url).read()
 
-        print(data[6:32252])
-        tree = ElementTree.fromstring(data[6:32252])
+        print(data[6:32253])
+        tree = ElementTree.fromstring(data[6:32253])
 
-        #tree=ElementTree.parse('tdata.xml')
+       # tree=ElementTree.parse('tdata.xml')
         itemElement = list(tree.iter("item"))
 
         for item in itemElement:
