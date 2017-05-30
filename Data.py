@@ -11,7 +11,7 @@ serviceKey="4lmWp814ERUDuydXPhoe%2FcCMA8%2BAdBGDoCEnTrCRixmHXdNe63pJDHI9NJueNefS
 
 
 def urlBuilder(server, key):
-    data='?'+'serviceKey='+key+'&numOfRows='+str(100)+'&pageNo='+str(1) +'&addr='
+    data='?'+'serviceKey='+key+'&numOfRows='+str(600)+'&pageNo='+str(1) +'&addr='
     request=server+data
 
     print(request)
@@ -37,10 +37,24 @@ class ChargingStation:
         url = urlBuilder(server, serviceKey)
         data = urllib.request.urlopen(url).read()
 
-        print(data[6:32253])
-        tree = ElementTree.fromstring(data[6:32253])
+        u=data.translate(None, b'\r\n')
+        u=u.decode('utf-8')
+        u=u.replace("10000","")
+        u = u.replace("c55b", "")
+        #print(u.len())
+        '''
+        .translate(None, b'ff16\r\n')
+        \r\n10000\r\n
+        \r\nc55b\r\n
+        \r\n0\r\n\r\n
+        '''
+        tree = ElementTree.fromstring(u[4:-1])
+        #print(data[6:32253])
+        #tree = ElementTree.fromstring(data[6:32253])
 
        # tree=ElementTree.parse('tdata.xml')
+
+
         itemElement = list(tree.iter("item"))
 
         for item in itemElement:
