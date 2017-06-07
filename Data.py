@@ -37,27 +37,31 @@ class ChargingStation:
     def __init__(self, station):
         url = urlBuilder(server, serviceKey)
         data = urllib.request.urlopen(url).read()
+
+
         print(data)
-        u = data.translate(None, b'\r\n')
+        u = data.decode('utf-8',"replace")
+        print(u)
+        import re
+        trash=re.findall('\r\n.{0,10}\r\n', u)
+        print(trash)
+        for i in trash:
+            u=u.replace(i, "")
+        u=u.replace('\r\n',"")
+
+        u=u[4:]
         print(u)
 
-        u = u.decode('utf-8',"replace")
-        u = u.replace("10000", "")
-        u = u.replace("c558", "")
-        u=u[4:-1]
-        print(u)
 
-        '''
-        .translate(None, b'ff16\r\n')
-        \r\n10000\r\n
-        \r\nc55b\r\n
-        \r\n0\r\n\r\n
-        '''
-        #tree = ElementTree.fromstring(u)
+        tree = ElementTree.fromstring(u)
+        # u = data.translate(None, b'\r\n')
+        # print(u)
+        # u=u.replace(m.,"")
+        # u = u.replace("10000", "")
+        # u = u.replace("c575", "")
         # print(data[6:32253])
         # tree = ElementTree.fromstring(data[6:32253])
-
-        tree=ElementTree.parse('tdata.xml')
+        #tree=ElementTree.parse('tmpData.xml')
 
 
         itemElement = list(tree.iter("item"))
@@ -72,8 +76,28 @@ class ChargingStation:
         for i in station:
             print(i)
 
-    def searchList(self, station, add, list):
+    def searchList(self, station, addr, list):
         list.clear()
+        dic={}
+
         for i in station:
-            if add in i["주소"]:
+            if addr in i["주소"]:
                 list.append(i)
+                dic[i["충전소 명"]] = i
+
+        return dic
+
+    def searchList2(self, station, name, list):
+        list.clear()
+
+        for i in station:
+            if name in i["충전소 명"]:
+                list.append(i)
+
+    def searchDic(self, station, addr):
+        dic={}
+        for i in station:
+            if addr in i["주소"]:
+                dic[i["충전소 명"]] = i
+
+        return dic
