@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic
 
 import Data
+import mail
 #import webView as w
 
 
@@ -15,7 +16,8 @@ searchList2=[]
 namedic={}
 nameLists=[]
 station=Data.ChargingStation(stationList)
-
+global maildata
+maildata=""
 qtCreatorFile = "UIDesign.ui"
 
 #html=w.maphtml
@@ -38,6 +40,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.search.clicked.connect(self.Search)
         self.comboBox.currentIndexChanged.connect(self.setcomboIndex)
         self.comboBox2.currentIndexChanged.connect(self.printInfo)
+        self.pushButton.clicked.connect(self.sendMail)
+
 
     def Search(self):
         add = self.lineEdit.text()
@@ -46,6 +50,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         print(nameLists)
 
         self.setComboBox(nameLists)
+        self.label_4.setText("")
         #self.setComboBox2()
         #self.printInfo()
 
@@ -108,6 +113,19 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.webView.setUrl(QtCore.QUrl(tmap))
         #print(stationData)
         self.textEdit.setText(stationData)
+        global maildata
+        maildata=stationData
+        self.label_4.setText("")
+
+    def sendMail(self):
+        addr = self.lineEdit_2.text()
+        print(addr)
+        print(maildata)
+        statue = mail.mail(maildata, addr)
+        self.label_4.setText(statue)
+        #print(statue)
+
+
 
 
 app = QApplication(sys.argv)
