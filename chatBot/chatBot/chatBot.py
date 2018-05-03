@@ -10,7 +10,7 @@ namedic={}
 nameLists=[]
 station=data.ChargingStation(stationList)
 
-bot=telepot.Bot('516302969:AAF-sYkOIWeIzvGFNzcDritqRmg9f4sNwZ8')
+bot=telepot.Bot('')
 
 userList=[]
 
