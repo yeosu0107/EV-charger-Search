@@ -1,6 +1,9 @@
 import telepot
+
 import data
 import time
+#gTTS 라이브러리 다운 후 임포트 해야함
+from gtts import gTTS
 
 stationList=[]
 searchList=[]
@@ -10,7 +13,7 @@ namedic={}
 nameLists=[]
 station=data.ChargingStation(stationList)
 
-bot=telepot.Bot('')
+bot=telepot.Bot('516302969:AAF-sYkOIWeIzvGFNzcDritqRmg9f4sNwZ8')
 
 userList=[]
 
@@ -108,9 +111,16 @@ def handle(msg):
             for i in loc.addr1:
                 if i in text:
                     tmp=loc.addrSearch(i, text)
-
+                    inputfi
                     if(tmp == "none"):
                         bot.sendMessage(chat_id, "구/군 까지 적어주셔야 더 정확한 검색이 가능합니다.")
+                        #텍스트를 음성파일로 변환
+                        tts = gTTS(text = tmptext, lang = 'ko')
+                        #생성한 음성파일을 mp3파일로 저장
+                        tts.save("tts_test.mp3")
+                        #전송은 못함...
+                        #bot.sendAudio(chat_id,"tts_test.mp3")
+
                     bot.sendMessage(chat_id, '검색 중...')
 
                     namedic=station.searchList(stationList, i, searchList)
@@ -149,6 +159,8 @@ def handle(msg):
         bot.sendMessage(chat_id, '위치기반 검색 명령은 아직 구현되지 않았습니다.')
         bot.sendMessage(chat_id, '입력한 위치 입니다.')
         bot.sendMessage(chat_id, mapHttp)
+    elif(content_type) =='voice':
+        bot.sendMessage(chat_id, '음성입력이 들어왔습니다')
     else:
         bot.sendMessage(chat_id, '텍스트와 위치만 처리할 수 있습니다.')
     
