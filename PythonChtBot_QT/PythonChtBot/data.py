@@ -3,6 +3,7 @@ import urllib.request
 
 from xml.dom.minidom import parse,parseString
 from xml.etree import ElementTree
+from datetime import datetime
 
 server='http://openapi.kepco.co.kr/service/evInfoService/getEvSearchList'
 serviceKey="4lmWp814ERUDuydXPhoe%2FcCMA8%2BAdBGDoCEnTrCRixmHXdNe63pJDHI9NJueNefS729hoLtHk67YiFbm6rOzEw%3D%3D"
@@ -17,20 +18,42 @@ def urlBuilder(server, key):
 
 def LoadPoint(item):
     dic = {}
-    dic["충전소 명"] = item.find("csNm").text
-    #print(dic["충전소 명"])
-    tsave = item.find("addr")
-    if tsave != None:
-       dic["주소"]=item.find("addr").text
+
+    if item.find("csNm") != None:
+        dic["충전소 명"] = item.find("csNm").text
+    else:
+        dic["충전소 명"] = "UnknownName"
+
+    if item.find("addr") != None:
+       dic["주소"] = item.find("addr").text
     else:
         dic["주소"] = dic["충전소 명"]
-    dic["충전기 타입"]=item.find("chargeTp").text
-    #dic["cpName"]=item.find("cpNm").text
-    dic["현재 상태"]=item.find("cpStat").text
-    #dic["type2"]=item.find("cpTp").text
-    dic["위도"]=item.find("lat").text
-    dic["경도"]=item.find("longi").text
-    dic["시간"]=item.find("statUpdateDatetime").text
+
+    if item.find("chargeTp") != None:
+        dic["충전기 타입"] = item.find("chargeTp").text
+    else:
+        dic["충전기 타입"] = 1
+
+    if item.find("cpStat") != None:
+        dic["현재 상태"] = item.find("cpStat").text
+    else:
+        dic["현재 상태"] = -1
+
+    if item.find("lat") != None:
+        dic["위도"] = item.find("lat").text
+    else:
+        dic["위도"] = -1
+
+    if item.find("longi") != None:
+        dic["경도"] = item.find("longi").text
+    else:
+        dic["경도"] = -1
+
+    if item.find("statUpdateDatetime") !=None:
+        dic["시간"] = item.find("statUpdateDatetime").text
+    else:
+        dic["시간"] = datetime.now()
+
     return dic
 
 
@@ -59,7 +82,6 @@ class ChargingStation:
         itemElement = list(tree.iter("item"))
 
         for item in itemElement:
-            #item.find("addr").text
             tmp = LoadPoint(item)
             station.append(tmp)
 

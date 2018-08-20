@@ -13,7 +13,7 @@ import detailInform_ui
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import * #table 쓰기위한 import 형식 
-from PyQt5 import sip 
+#from PyQt5 import sip
 
 
 
