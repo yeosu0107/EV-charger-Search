@@ -32,10 +32,10 @@ def main(request):
 
     if req is None:
         returnVal["fulfillmentText"] = "ERROR"
+        returnVal["fulfillmentMessages"] = "알수없는 메시지 입니다."
     else:
-        returnVal["fulfillmentText"] = "SUCCESS"
-        location = req.get("result").get("parameters").get("location")
-        returnVal["result"] = HandleText(location)
+        location = req.get("queryResult").get("parameters").get("location")
+        returnVal["fulfillmentText"] = HandleText(location)
 
     return json.dumps(returnVal, ensure_ascii=False, indent="\t")
 
@@ -53,8 +53,15 @@ def HandleText(msg):
             namelist = list(namedic.keys())
 
             tmptext = ''
+
+            tmptext += "총 " + str(len(namelist)) + "개의 충전소가 검색되었습니다.\\n\\n"
+
             for name in namelist:
-                tmptext += '충전소 명 : '+ name + '\n'
+                tmptext += '충전소 명 : '+ name + '\\n'
+
+            tmptext +="\\n"
+
+            tmptext += "충전소 이름으로 검색을 하시면 더 자세한 정보를 얻을 수 있습니다."
 
             return tmptext
 
